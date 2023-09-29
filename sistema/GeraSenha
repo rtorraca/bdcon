@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+
+// Gera senha para utilização no banco de dados.
+
+error_reporting(E_ERROR | E_PARSE);
+require_once "IncludeConfig.php"; //Deve vir antes do db.
+require_once "IncludeConexao.php";
+require_once "IncludeFuncoes.php";
+
+$senha = Crypto::EncryptValue(Funcoes::ConteudoMascaraGravacao01($argv[1]), $GLOBALS['configUsuariosMetodoSenha']);
+
+print "\n$senha\n\n";
+
+?>

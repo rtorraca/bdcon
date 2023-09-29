@@ -1,0 +1,56 @@
+INSTRUÇÕES DE INSTALAÇÃO
+------------------------
+
+
+Requisitos:
+-------------
+
+- PHP 7.0
+- MariaDB ou MySQL
+- Servidor Apache ou outro com suporte a PHP
+
+
+Instalação em um servidor Debian Linux
+--------------------------------------
+
+Passo a passo:
+--------------
+
+1- Descompactar os arquivos de instalação na pasta /srv:
+
+cp bdcon.tgz /srv;
+cd /srv;
+tar xzvf bdcon.tgz
+rm bdcon.tgz
+
+2- Ajustar permissões
+
+sudo chown root.www-data ./bdcon/sistema/arquivos
+sudo chmod g+w ./bdcon/sistema/arquivos
+
+3- Instalar as dependências necessárias
+
+sudo apt-get install apt-transport-https
+sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+sudo sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+sudo apt-get update
+
+sudo apt-get install libapache2-mod-php7.0 php7.0-xml php7.0-mysql php7.0-mcrypt php7.0-gd
+sudo apt-get install mariadb-server
+
+4- Configurar o MariaDB
+
+sudo mariadb
+
+create database bdcon;
+grant all privileges on bdcon.* to 'bdcon'@'localhost' identified by 'password';
+exit
+
+sudo cat bdcon/config/bdcon.sql | mariadb -D bdcon
+
+5- Configurar o Apache
+
+sudo cp bdcon/config/bdcon.conf /etc/apache2/sites-available/
+sudo find /etc/apache2/sites-enabled/ -type l -delete
+sudo ln -s ../sites-available/bdcon.conf /etc/apache2/sites-enabled/
+sudo apachectl restart
